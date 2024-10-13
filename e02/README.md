@@ -1,3 +1,5 @@
+Try this in the shell
+
 ``` shell
 
 # run tests
