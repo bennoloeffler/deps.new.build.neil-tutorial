@@ -1,4 +1,4 @@
-(ns main-test
+(ns deps-tutorial.main-test
   (:require [clojure.test :refer :all]
             [deps-tutorial.main :as main]))
 
