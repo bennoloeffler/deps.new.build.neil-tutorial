@@ -68,7 +68,7 @@ First, the
 Then, you may call it like:
 ```clj -T:build jar```
 In the special case of the uber jar target, you need (:gen-class) and a -main fn in the :main namespace, see example folder
-```e2```
+```e02```
 
 for details on tools.build, see:
 - [tools.build guide](https://clojure.org/guides/tools_build)
@@ -80,7 +80,8 @@ for details on tools.build, see:
 clojure -Ttools install-latest :lib io.github.seancorfield/deps-new :as new
 ```
 How to create a new project from templates?
-TODO
+In the root-folder of this tutorial, I created a project like this:
+clojure -Tnew app :name deps-tutorial/e03
 
 for details, see: 
 - [deps-new](https://github.com/seancorfield/deps-new)
