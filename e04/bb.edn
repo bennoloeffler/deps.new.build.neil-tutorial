@@ -1,0 +1,77 @@
+;; FOR AUTOCOMPLETION IN ZSH, put in .zshrc:
+
+;; #completition with babashka tasks
+;; _bb_tasks() {
+;;     local matches=(`bb tasks |tail -n +3 |cut -f1 -d ' '`)
+;;     compadd -a matches
+;;     #_files # uncomment to autocomplete filenames as well
+;; }
+;; compdef _bb_tasks bb
+
+
+{:tasks
+ {:requires ([babashka.fs :as fs]
+             [babashka.process :refer [shell process exec]])
+
+  
+  help {:doc "show help"
+        :task (do
+                (println)
+                (println "\u001B[32;1;4mHelp for bb tasks:\033[0m")
+                (shell "bb" "tasks")
+                (println)
+                (println "for multiple tasks, use e.g. bb test && bb tree")
+                (println)
+                (println "\u001B[32;1;4mFor help for babashka, use \n\u001B[31mbb --help"))
+        :override-builtin true}
+
+  test {:doc "Run tests once with cognitect test-runner"
+        :task (do (println "going to run tests with cognitect test-runner...")
+                  (clojure "-T:build test"))}
+  #_te #_{;:doc "te = test"
+          :task (shell "bb" "test")}
+
+
+  kaocha {:doc "Run tests continously with kaocha"
+          :task (do (println "going to run kaocha continously ...")
+                    (clojure "-M:kaocha --watch"))}
+  #_k #_{:doc "k = kaocha"
+         :task (shell "bb" "kaocha")}
+
+  main {:doc "Run main function. Did not call it 'run' because it would override the built-in run task"
+        :task (apply clojure "-M:run-m" *command-line-args*)}
+
+  uber {:doc "Run tests and if success: build uberjar"
+        :task (clojure "-T:build ci")}
+  #_ub #_{;:doc "ub = uber"
+          :task (shell "bb" "uber")}
+
+
+  tree {:doc "Show transitive dependencies as a tree, with clojure -T:deps tree"
+        :task (clojure "-T:deps tree")}
+  #_tr #_{;:doc "tr = tree"
+          :task (shell "bb" "tree")}
+
+
+  tree-visual {:doc "Show project dependencies as a tree. Requires graphviz. Creates a PNG file called project-dependencies-graph.png"
+               :task (do
+                       (clojure "-X:graph/deps")
+                       (shell "open" "project-dependencies-graph.png"))}
+  #_tv #_{;:doc "tv = tree-visual"
+          :task (shell "bb" "tree-visual")}
+
+
+  upgrade-check {:doc "Check for outdated dependencies - dry run only"
+                 :task (do
+                         (shell "neil dep upgrade --dry-run")
+                         (println "To upgrade dependencies, run: \nbb upgrade"))}
+  #_uc #_{;:doc "uc = upgrade-check"
+          :task (shell "bb" "upgrade-check")}
+
+
+  upgrade {:doc "Upgrade dependencies - change it in deps.edn"
+           :task (do
+                   (shell "neil dep upgrade")
+                   (println "upgrade of dependencies DONE :-)"))}
+  #_up #_{;:doc "up = upgrade"
+          :task (shell "bb" "upgrade")}}}

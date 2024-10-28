@@ -1,0 +1,16 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}}
+ :aliases
+ {:run-m {:main-opts ["-m" "e05.e05"]}
+  :run-x {:ns-default e05.e05
+          :exec-fn greet
+          :exec-args {:name "Clojure"}}
+  :build {:deps {io.github.clojure/tools.build
+                 {:git/tag "v0.9.2" :git/sha "fe6b140"}}
+          :ns-default build}
+  :test {:extra-paths ["test"]
+           :extra-deps {io.github.cognitect-labs/test-runner
+                        {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+          :main-opts ["-m" "cognitect.test-runner"]
+          :exec-fn cognitect.test-runner.api/test}
+  :neil {:project {:name e05/e05}}}}

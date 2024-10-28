@@ -1,0 +1,1 @@
+{:deps {com.taoensso/timbre {:mvn/version "6.5.0"}}}

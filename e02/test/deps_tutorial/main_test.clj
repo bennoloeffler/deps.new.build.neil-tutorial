@@ -4,4 +4,4 @@
 
 (deftest main-test
   (testing "main"
-    (is (= "Hello, world!" (main/-main)))))
+    (is (= "Hello, world!" (main/-main {:name "Benno"})))))

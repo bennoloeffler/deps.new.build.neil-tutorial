@@ -1,0 +1,33 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}}
+ :aliases
+ {:run-m  {:main-opts ["-m" "e04.e04"]}
+
+  :run-x  {:ns-default e04.e04
+           :exec-fn    greet
+           :exec-args  {:name "Clojure"}}
+
+  :neil   {:project {:name e04/e04}} ; used by neil: jar, uber, install, deploy, 
+
+  ; all the rest should be moved to
+  ; ~/.clojure/deps.edn 
+  ; to be available in all projects
+
+  :build  {:deps       {io.github.clojure/tools.build {:git/tag "v0.9.2"
+                                                       :git/sha "fe6b140"}}
+           :ns-default build}
+
+  :test   {:extra-paths ["test"]
+           :extra-deps  {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1"                                                               :git/sha "dfb30dd"}}
+           :main-opts   ["-m" "cognitect.test-runner"]
+           :exec-fn     cognitect.test-runner.api/test}
+
+  :kaocha {:extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
+           :main-opts  ["-m" "kaocha.runner"]}
+
+  :graph/deps {:replace-paths []
+               :replace-deps  {org.clojure/tools.deps.graph {:mvn/version "1.1.90"}}
+               :ns-default    clojure.tools.deps.graph
+               :exec-fn       graph
+               :exec-args     {:output "project-dependencies-graph.png"
+                               :size   true}}}}

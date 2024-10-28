@@ -1,8 +1,19 @@
 {:paths   ["src"]
- :deps    {org.clojure/clojure {:mvn/version "1.12.0"}}
- :aliases {;; Run with clj -T:build function-in-build
+ :deps    {org.clojure/clojure {:mvn/version "1.12.0"}
+           tick/tick {:mvn/version "1.0"}}
+           
+ :aliases {;; This is needed to use build.clj
+           ;; Run functions in build.clj with clj -T:build fn-in-build.clj
+           ;; T means t_ool and build (io.github.clojure/tools.build) is one of many tools
+           ;; e.g. clj -T:build ueberjar
            :build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.5"}}
                    :ns-default build}
+           
            :test {:extra-paths ["test"]
                   :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
-                  :main-opts   ["-m" "kaocha.runner"]}}}
+                  :main-opts   ["-m" "kaocha.runner"]}
+           
+           ;; Run function 
+           ;; This is called with 'clj -X:run'
+           ;; -X means: e_x_ecute a fn
+           :run  {:exec-fn deps-tutorial.main/-main}}}

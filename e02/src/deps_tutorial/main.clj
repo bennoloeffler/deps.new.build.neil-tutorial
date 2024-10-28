@@ -1,7 +1,7 @@
 (ns deps-tutorial.main
   (:gen-class))
 
-(defn -main []
+(defn -main [& opts]
   (let [h "Hello, world!"]
-    (println h)
+    (prn h  opts)
     h))

@@ -1,3 +1,12 @@
+This README.md was automatically created by calling
+``` shell
+clojure -Tnew app :name deps-tutorial/e03
+```
+as described here ../README.md#e03-deps-new
+
+----
+
+
 # deps-tutorial/e03
 
 FIXME: my new application.

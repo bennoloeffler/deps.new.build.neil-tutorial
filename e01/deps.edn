@@ -1,5 +1,29 @@
 {:paths   ["src"]
- :deps    {org.clojure/clojure {:mvn/version "1.12.0"}}
- :aliases {:test {:extra-paths ["test"]
+ 
+ :deps    {org.clojure/clojure {:mvn/version "1.12.0"}
+           clojure.java-time/clojure.java-time {:mvn/version "1.4.1"}}
+ 
+ :aliases {
+           ;; This is called with 'clj -M:test'
+           ;; -M means: call clojure._m_ain
+           :test {:extra-paths ["test"]
                   :extra-deps  {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
-                  :main-opts   ["-m" "kaocha.runner"]}}}
+                  ;; -m runs the -main function in the namespace kaocha.runner
+                  :main-opts   ["-m" "kaocha.runner"]}
+           
+           ;; Run function 
+           ;; with :exec-fn
+           ;; This is called with 'clj -X:run'
+           ;; -X means: e_x_ecute a fn
+           :run  {:exec-fn deps-tutorial.main/main
+                  :exec-args {:person "Hugo"}}
+           
+           ;; since it has :main-opts, it is called with 'clj -M:uberjar'
+           :uberjar {:extra-deps {uberdeps/uberdeps {:mvn/version "0.1.4"}}
+                     :main-opts  ["-m" "uberdeps.uberjar" "--target" "target/e01-0.1.0.jar"]}
+           
+           ;; since it has :main-opts, it is called with 'clj -M:outdated'
+           :outdated {;; Note that it is `:deps`, not `:extra-deps`
+                       :deps {org.slf4j/slf4j-nop {:mvn/version "2.0.16"} ; to suppress SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+                              com.github.liquidz/antq {:mvn/version "RELEASE"}}
+                       :main-opts ["-m" "antq.core"]}}}
