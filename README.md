@@ -103,8 +103,7 @@ clj -Moutdated
 ```
 
 Based on tomekw`s [deps tutorial](https://github.com/tomekw/cdeps), I created a first example in folder 
-```e01```. Go there, have a look at the 
-```e01/README.md``` for more examples of clj usage and start experimenting.
+```e01```. Go there, have a look at the ```e01/README.md``` for more examples of clj usage and start experimenting.
 
 
 For more details on clj and deps.edn, see:
