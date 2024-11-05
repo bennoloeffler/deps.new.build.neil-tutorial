@@ -84,3 +84,4 @@ clj꞉deps-tutorial.main꞉> 
 clj꞉deps-tutorial.main꞉> 
 #'deps-tutorial.main/square-cli
 clj꞉deps-tutorial.main꞉> 
+; nREPL Connection was closed

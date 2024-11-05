@@ -6,7 +6,7 @@ as described here ../README.md
 
 Go to terminal and type:
 ```shell
-bb tasks
+bb help
 ```
 
 ----

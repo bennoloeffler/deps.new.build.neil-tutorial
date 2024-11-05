@@ -5,22 +5,27 @@
     [bel.e06.config :as config]
     [bel.e06.env :refer [defaults]]
 
-    ;; Edges       
+    ;; Edges  
+    [kit.edge.db.xtdb]
+    [kit.edge.db.sql.conman]
+    [kit.edge.db.sql.migratus]
+    [kit.edge.db.postgres]
+    [kit.edge.db.mysql]     
     [kit.edge.server.undertow]
     [bel.e06.web.handler]
 
     ;; Routes
-    [bel.e06.web.routes.api])
-
+    [bel.e06.web.routes.api]
+    
+    [bel.e06.web.routes.pages])
   (:gen-class))
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
-  (reify Thread$UncaughtExceptionHandler
-    (uncaughtException [_ thread ex]
+  (fn [thread ex]
       (log/error {:what :uncaught-exception
                   :exception ex
-                  :where (str "Uncaught exception on" (.getName thread))}))))
+                  :where (str "Uncaught exception on" (.getName thread))})))
 
 (defonce system (atom nil))
 

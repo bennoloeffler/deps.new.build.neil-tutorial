@@ -1,29 +1,37 @@
 {:paths   ["src/clj"
-           "resources"]
+           "resources" "src/cljs"]
 
- :deps    {org.clojure/clojure             {:mvn/version "1.12.0"}
+ :deps    {org.clojure/clojure {:mvn/version "1.12.0"}
 
            ;; Routing
-           metosin/reitit                  {:mvn/version "0.6.0"}
+ metosin/reitit {:mvn/version "0.6.0"}
 
            ;; Ring
-           metosin/ring-http-response      {:mvn/version "0.9.3"}
-           ring/ring-core                  {:mvn/version "1.12.0"}
-           ring/ring-defaults              {:mvn/version "0.5.0"}
+ metosin/ring-http-response {:mvn/version "0.9.3"}
+ ring/ring-core {:mvn/version "1.13.0"}
+ ring/ring-defaults {:mvn/version "0.5.0"}
 
            ;; Logging
-           ch.qos.logback/logback-classic  {:mvn/version "1.5.7"}
-           
+ ch.qos.logback/logback-classic {:mvn/version "1.5.7"}
+
            ;; Data coercion
-           luminus-transit/luminus-transit {:mvn/version "0.1.6"
-                                            :exclusions [com.cognitect/transit-clj]}
-           metosin/muuntaja                {:mvn/version "0.6.8"}
+ luminus-transit/luminus-transit {:mvn/version "0.1.6"
+                                  :exclusions [com.cognitect/transit-clj]}
+ metosin/muuntaja {:mvn/version "0.6.8"}
 
            ;; kit Libs
-           io.github.kit-clj/kit-core {:mvn/version "1.0.9"}
-           io.github.kit-clj/kit-undertow {:mvn/version "1.0.7"}
-           }
- :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
+ io.github.kit-clj/kit-core {:mvn/version "1.0.9"}
+ io.github.kit-clj/kit-undertow {:mvn/version "1.0.7"}
+ io.github.kit-clj/kit-xtdb {:mvn/version "1.0.4"}
+ io.github.kit-clj/kit-mysql {:mvn/version "1.0.5"}
+ io.github.kit-clj/kit-postgres {:mvn/version "1.0.7"}
+ io.github.kit-clj/kit-sql-conman {:mvn/version "1.10.5"}
+ io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.5"}
+ selmer/selmer {:mvn/version "1.12.50"}
+ luminus/ring-ttl-session {:mvn/version "0.3.3"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
+ babashka/fs {:mvn/version "0.1.11"}
+ babashka/process {:mvn/version "0.3.11"}}
                    :ns-default build}
 
 
@@ -33,12 +41,14 @@
                                 integrant/repl                  {:mvn/version "0.3.3"}
                                 mvxcvi/cljstyle                 {:mvn/version "0.16.630"}
                                 pjstadig/humane-test-output     {:mvn/version "0.11.0"}
-                                ring/ring-devel                 {:mvn/version "1.12.0"}
+                                ring/ring-devel                 {:mvn/version "1.13.0"}
                                 ring/ring-mock                  {:mvn/version "0.4.0"}
                                 io.github.kit-clj/kit-generator {:mvn/version "0.2.3"}
                                 org.clojure/tools.namespace     {:mvn/version "1.4.4"}
+                                com.xtdb/xtdb-rocksdb           {:mvn/version "1.21.0-beta3"}
+                                com.xtdb/xtdb-http-server       {:mvn/version "1.21.0-beta3"}
                                 }
-                  :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]}
+                  :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj" "target/classes/cljsbuild"]}
            :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "1.1.0"}}
                    :main-opts  ["-m" "nrepl.cmdline" "-i"]}
            :cider {:extra-deps {nrepl/nrepl       {:mvn/version "1.1.0"}
@@ -60,6 +70,5 @@
                   :exec-fn      cognitect.test-runner.api/test
                   :extra-paths ["env/dev/clj" "env/dev/resources" "env/test/resources" "test/clj"]
                   :main-opts   ["-e" "(require 'pjstadig.humane-test-output) (pjstadig.humane-test-output/activate!)"
-                                "-m" "cognitect.test-runner"]}
-           :neil {:project {:name bel/e06}}}
+                                "-m" "cognitect.test-runner"]}}
  }

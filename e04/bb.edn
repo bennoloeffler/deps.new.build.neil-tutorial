@@ -1,4 +1,5 @@
-;; FOR AUTOCOMPLETION IN ZSH, put in .zshrc:
+;; FOR AUTOCOMPLETION IN ZSH, there is the task auto-complete
+;; that puts this at the end of .zshrc:
 
 ;; #completition with babashka tasks
 ;; _bb_tasks() {
@@ -10,68 +11,110 @@
 
 
 {:tasks
- {:requires ([babashka.fs :as fs]
+ {:requires ([clojure.string :as str]
+             [babashka.fs :as fs]
              [babashka.process :refer [shell process exec]])
 
-  
+
   help {:doc "show help"
         :task (do
+                (def green "\u001B[32m")
+                (def green-bold "\u001B[32;1;4m")
+                (def red "\u001B[31m")
+                (def color-reset "\033[0m")
                 (println)
-                (println "\u001B[32;1;4mHelp for bb tasks:\033[0m")
+                (println (str green "Help for bb tasks in file\n"
+                              green-bold (fs/absolutize "bb.edn")
+                              color-reset "\n"))
                 (shell "bb" "tasks")
                 (println)
                 (println "for multiple tasks, use e.g. bb test && bb tree")
                 (println)
-                (println "\u001B[32;1;4mFor help for babashka, use \n\u001B[31mbb --help"))
+                (println (str green "For help for babashka, use \n"
+                              red "bb --help")))
         :override-builtin true}
+
+  clean {:doc "clean project from all build artefacts."
+         :task (do (println "going to clean...")
+                   (clojure "-T:build clean"))}
+
 
   test {:doc "Run tests once with cognitect test-runner"
         :task (do (println "going to run tests with cognitect test-runner...")
                   (clojure "-T:build test"))}
-  #_te #_{;:doc "te = test"
-          :task (shell "bb" "test")}
-
 
   kaocha {:doc "Run tests continously with kaocha"
           :task (do (println "going to run kaocha continously ...")
                     (clojure "-M:kaocha --watch"))}
-  #_k #_{:doc "k = kaocha"
-         :task (shell "bb" "kaocha")}
 
   main {:doc "Run main function. Did not call it 'run' because it would override the built-in run task"
         :task (apply clojure "-M:run-m" *command-line-args*)}
 
-  uber {:doc "Run tests and if success: build uberjar"
-        :task (clojure "-T:build ci")}
-  #_ub #_{;:doc "ub = uber"
-          :task (shell "bb" "uber")}
 
+  jar {:doc "create jar - just package sources"
+       :task (do (println "create jar - just package sources...")
+                 (clojure "-T:build jar"))}
+
+  uber {:doc "Run tests and if success: build uberjar"
+        :task (clojure "-T:build uber")}
 
   tree {:doc "Show transitive dependencies as a tree, with clojure -T:deps tree"
         :task (clojure "-T:deps tree")}
-  #_tr #_{;:doc "tr = tree"
-          :task (shell "bb" "tree")}
-
 
   tree-visual {:doc "Show project dependencies as a tree. Requires graphviz. Creates a PNG file called project-dependencies-graph.png"
                :task (do
                        (clojure "-X:graph/deps")
                        (shell "open" "project-dependencies-graph.png"))}
-  #_tv #_{;:doc "tv = tree-visual"
-          :task (shell "bb" "tree-visual")}
-
 
   upgrade-check {:doc "Check for outdated dependencies - dry run only"
                  :task (do
                          (shell "neil dep upgrade --dry-run")
                          (println "To upgrade dependencies, run: \nbb upgrade"))}
-  #_uc #_{;:doc "uc = upgrade-check"
-          :task (shell "bb" "upgrade-check")}
-
 
   upgrade {:doc "Upgrade dependencies - change it in deps.edn"
            :task (do
                    (shell "neil dep upgrade")
                    (println "upgrade of dependencies DONE :-)"))}
-  #_up #_{;:doc "up = upgrade"
-          :task (shell "bb" "upgrade")}}}
+
+  search {:doc "Search lib at Maven/clojars: bb search text"
+          :task (try
+
+                  (when (< (count *command-line-args*) 1)
+                    (println "Usage:\nbb search text\nprovide A search text")
+                    (System/exit 1))
+                  (when (> (count *command-line-args*) 1)
+                    (println "Usage: \nbb search text\nprovide ONE word as search text - DON'T quote. ONLY ONE WORD USED!")
+                    (System/exit 1))
+                  (when (> (count (str/split (first *command-line-args*) (re-pattern " "))) 1)
+                    (println "Usage: \nbb search text\nprovide ONE WORD ONLY - DON'T quote.")
+                    (System/exit 1))
+                  (def arg (apply str *command-line-args*))
+                  (shell (str "neil dep search " arg))
+                  (catch Exception e
+                    (println arg "NOT FOUND")))}
+
+  install {:doc "create pom.xml, jar and install as lib in local maven cache repo"
+           :task (do ;(clojure "-X:deps mvn-pom")
+                     ;(shell "bb" "jar")
+                   (clojure (str "-T:build install")))}
+
+  deploy {:doc "test, jar and deploy to clojars"
+          :task (do
+                  (println "if not:CLOJARS_USERNAME and CLOJARS_PASSWORD (token instead) in environment variables")
+                  (println "going to test, clean,  deploy to clojars...")
+                  (clojure "-T:build deploy"))}
+
+  list-clj-tools {:doc "list all installed clj tools, callable with 'clj -Ttools ...'"
+                  :task (shell "clj -Ttools list")}
+
+  auto-complete {:doc "installs autocomplete to ~/.zshrc"
+                 :task (let [home-dir (System/getProperty "user.home")
+                             zshrc-path (str home-dir "/.zshrc")
+                             zshrc-txt (slurp zshrc-path)
+                             installed (clojure.string/includes? zshrc-txt "`bb tasks")
+                             completition-code "#completition with babashka tasks\n_bb_tasks() {\n    local matches=(`bb tasks |tail -n +3 |cut -f1 -d ' '`)\n    compadd -a matches\n    #_files # autocomplete filenames as well\n}\ncompdef _bb_tasks bb"]
+                         (if installed
+                           (println "bb <tab> autocomplete for bb tasks is \nALREADY INSTALLED. Not working? Try to restart your shell.")
+                           (do
+                             (spit zshrc-path (str zshrc-txt "\n\n" completition-code))
+                             (println "bb tasks is NOW INSTALLED.\nRestart your shell or do\nsource ~/.zshrc"))))}}}
