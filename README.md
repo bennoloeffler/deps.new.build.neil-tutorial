@@ -331,7 +331,7 @@ clj -X:graph/deps
 For good reasons that is also not part of neil.
 
 
-### How to remember all that?
+### How to remember? Well babashka and bb.edn...
 neil is good - but not yet THE solution for me,
 because many clj commands are hard to remember.
 neil helps me to create the project - but not with all the rest.
@@ -449,10 +449,6 @@ for details, see:
 
 But there are still some pieces missing:
 - cljs for web development of SPAs
-- debugging tools - for clj and cljs files
-- deploying as a running web-app to a hosting service
-
-
 
 ### example e05: cljs and re-frame
 
@@ -512,7 +508,7 @@ Then it worked... There MUST be a newer cljs/re-frame template?
 I gave up on this and hoped for kit...
 Although there are plenty of templates to start with a cljs project:
 - [thheller tutorial about cljs and deps.edn](https://code.thheller.com/blog/shadow-cljs/2024/10/18/fullstack-cljs-workflow-with-shadow-cljs.html)
-- [templates on cljs homepage](https://clojurescript.org/guides/project-templates)
+- [templates on the cljs homepage](https://clojurescript.org/guides/project-templates)
 - [MOST MATURE LEIN template with many +options](https://github.com/day8/re-frame-template)
 - [create-cljs-app](https://github.com/filipesilva/create-cljs-app)
 
@@ -527,7 +523,7 @@ For all aliases see package.json.
 For tests: http://localhost:8290/
 For app: http://localhost:8280/
 
-That just wored - by the way: 
+That just worked - by the way: 
 It does not include a lein project.clj ;-)
 
 TODO try this:
@@ -535,7 +531,7 @@ https://github.com/kees-/re-marfer
 
 
 ### example e06: kit - a full fledged clj/cljs SPA web app with clj/deps.end
-If you want to have a configuration for a web app with a jvm backend and a cljs frontend, you may need kit, the clj-version of luminus. Luminus is based on leiningen. Kit is based on clj.
+If you want to have a configuration for a web app with a jvm backend and a cljs frontend, you may use kit, the clj-version of luminus. Luminus is based on leiningen. Kit is based on clj. There was a very, very good book, guiding you through a complete SPA webapp. Probably, the kit documentation is a similar good full docu of all aspects of a web app.
 
 If you are starting completely from scatch, this is needed to create a project in clojure
 ``` shell
@@ -549,7 +545,8 @@ If you are starting completely from scatch, this is needed to create a project i
 clojure -Ttools install-latest :lib com.github.seancorfield/clj-new :as clj-new
 
 # then
-clojure -Tclj-new create :template io.github.kit-clj :name bel/e06 :args '[+xtdb +sql]'
+clojure -Tclj-new create :template io.github.kit-clj :name bel/e06 
+# :args '[+xtdb +sql]'
 ```
 [+full] includes: +xtdb, +hato, +metrics, +quartz, +redis, +repl, +selmer, and +sql
 
@@ -569,23 +566,23 @@ To add cljs, database and some other magic, you need to run in the  repl:
 ```
 Have a look at e06/README.md.
 
-Then start a continous frontend compilation mode of 
-shadow-cljs
+Then start a continous frontend compilation mode of shadow-cljs
 ```
 shadow-cljs -A dev watch app
 ``` 
 
 
-Then, start a backend repl, 
+Then, re-start a backend repl, 
 e.g.
 ```
 clj -M:dev
 ```
 Or start intellij with cursive.
 "File->Open" Navigate to the deps.edn in the project.
-Add: -A:dev to the run-configuration. 
-Then (go) in the repl starts the server... but there are several obstacles:
-- sql connect string - u just see a connection problem. Change it to something like:
+Add: -M:dev to the run-configuration. 
+Then (go) in the repl starts the server... 
+
+- Having added sql as module, I had to fix the connect string:
 "jdbc:postgresql://localhost/template1?user=postgres&password=xr...r"
 where template1 is the database name.
 - then created a migration:
@@ -593,35 +590,56 @@ where template1 is the database name.
 - ERROR MESSAGE: Execution error (IllegalArgumentException) at integrant.core/try-build-action (core.cljc:332).
 No method in multimethod 'init-key' for dispatch value: :reitit.routes/pages
 
-STOPPED HERE. I should have read this:
+STOPPED HERE. I should have read this and started from the very first step:
 [Your First Application - in KIT Docu](https://kit-clj.github.io/docs/guestbook.html) 
 
-To make it work, read [kit introduction](https://yogthos.net/posts/2022-01-08-IntroducingKit.html)
+Aditional stuff [kit introduction](https://yogthos.net/posts/2022-01-08-IntroducingKit.html)
 
 Still more upfront work to be done than a beginner can stand for a simple SPA... Couldnt there be a SPA configuration with a file based backend, a user-management, so that i can just start with a web application?
 
-### TODO example e07: bringing all together...
-Maybe its simple:
-create a frontend-app.
-create a backend-app.
-Separate them.
+### TODO example e07: bringing all together
+
+A lib template
+A frontend-template
+A fullstack template
+- A template like kit
+- reasonable css as default
+- routing 
+- re-frame
+- user authentication and roles
+- xtdb on the server side - with examples for user management
+- menu
+- client side routing
+- shadow-cljs
+- all aliases needed to work
+- build.clj with ci and all single steps (clean, jar, ... deploy)
+- bb.edn with everything to lookup
 
 see:
 - [all the tools in practically deps.edn](https://github.com/practicalli/clojure-cli-config/blob/main/deps.edn)
 - [video practically](https://www.youtube.com/watch?v=u5VoFpsntXc)
 - [video Sean Corfield](https://youtu.be/CWjUccpFvrg?si=cagzN032WH5wjmn7)
-
-
-
-
-### TODO example e09: my own template
 creating my own project template...
 [deps-new templates](https://github.com/seancorfield/deps-new?tab=readme-ov-file#templates)
 
 
-### TODO example e10: electric - the new shit
-https://github.com/hyperfiddle/electric-v2-starter-app
 
+### TODO example e08: electric - the new shit
+https://github.com/hyperfiddle/electric-v2-starter-app
+I just did:
+```
+git clone https://github.com/hyperfiddle/electric-v2-starter-app.git e08
+```
+then started a repl with dev profile and called 
+```
+(dev/-main)
+```
+
+then:
+http://localhost:8080/
+
+have a look at all the demos.
+Well: nice. but faaaaaar to complicated to start.
 
 ## install as tool, alias (also in ~/.clojure/deps.edn) or use directly?
 As an example, we install "deps-new lib" in different ways:

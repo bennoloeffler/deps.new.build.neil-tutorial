@@ -11,7 +11,7 @@
  :handler/ring
  {:router #ig/ref :router/core
   :api-path "/api"
-  :cookie-secret #or [#env COOKIE_SECRET "IOGQZIVGDJZINJON"]
+  :cookie-secret #or [#env COOKIE_SECRET "PIGIKPBYFADQDXDA"]
   ;; from ring.middleware.defaults. anti-forgery `false` by default because services may not require it
   :site-defaults-config {:params {:urlencoded true
                                   :multipart true
@@ -36,8 +36,7 @@
 
  :reitit.routes/api
  {:base-path "/api"
-  :env #ig/ref :system/env
-  :query-fn #ig/ref :db.sql/query-fn}
+  :env #ig/ref :system/env}
 
  :router/routes
  {:routes #ig/refset :reitit/routes}
@@ -45,40 +44,5 @@
  :router/core
  {:routes #ig/ref :router/routes
   :env #ig/ref :system/env}
-
- ;; https://docs.xtdb.com/administration/configuring/
- :db.xtdb/node
- #profile {:dev {:xtdb.http-server/server {:port 3100}
-                 :xtdb/tx-log {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
-                                          :db-dir "data/dev/tx-log"
-                                          :sync? true}}
-                 :xtdb/document-store {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
-                                                  :db-dir "data/dev/doc-store"
-                                                  :sync? true}}
-                 :xtdb/index-store {:kv-store {:xtdb/module xtdb.rocksdb/->kv-store
-                                               :db-dir "data/dev/index-store"
-                                               :sync? true}}}
-           :test {}
-           :prod {}}
-
- :db.sql/connection
- #profile {:dev {:jdbc-url "jdbc:postgresql://localhost/template1?user=postgres&password=xr600r"}
-           :test {}
-           :prod {:jdbc-url #env JDBC_URL
-                  :init-size 1
-                  :min-idle 1
-                  :max-idle 8
-                  :max-active 32}}
-
- :db.sql/query-fn
- {:conn #ig/ref :db.sql/connection
-  :options {}
-  :filename "queries.sql"
-  :env #ig/ref :system/env}
-
- :db.sql/migrations
- {:store :database
-  :db {:datasource #ig/ref :db.sql/connection}
-  :migrate-on-init? true}
  :reitit.routes/pages {:base-path "",
                        :env #ig/ref :system/env}}

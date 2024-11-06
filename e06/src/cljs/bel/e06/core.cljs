@@ -7,7 +7,12 @@
 ;; Views
 
 (defn home-page []
-  [:div [:h2 "Welcome to Reagent!"]])
+  [:div 
+   [:h2 "Welcome to Reagent from core.cljs!"]
+   [:div [:p "This is a simple Reagent app."]]
+   [:button 
+    {:on-click #(js/alert "You clicked me!")}
+    "DON'T click me!"]])
 
 ;; -------------------------
 ;; Initialize app

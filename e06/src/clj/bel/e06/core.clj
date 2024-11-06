@@ -5,12 +5,7 @@
     [bel.e06.config :as config]
     [bel.e06.env :refer [defaults]]
 
-    ;; Edges  
-    [kit.edge.db.xtdb]
-    [kit.edge.db.sql.conman]
-    [kit.edge.db.sql.migratus]
-    [kit.edge.db.postgres]
-    [kit.edge.db.mysql]     
+    ;; Edges       
     [kit.edge.server.undertow]
     [bel.e06.web.handler]
 
