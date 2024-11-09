@@ -99,6 +99,8 @@ clj -Aoutdated
 # please use:
 clj -Moutdated 
 
+# show classpath for this alias
+clj -Spath -M:test 
 
 ```
 
@@ -112,6 +114,7 @@ for more examples of clj usage and start experimenting.
 
 For more details on clj and deps.edn, see:
 - tomekw`s [deps tutorial](https://github.com/tomekw/cdeps), e.g. for uberjar and ancient examples in deps.edn
+- [Volodymyr Kozieievs tutorial](https://kozieiev.com/blog/clojure-cli-tools-deps-deps-edn-guide/)
 - [deps.edn guide](https://clojure.org/guides/deps_and_cli)
 - [deps.edn reference](https://clojure.org/reference/deps_edn) for all options
 
@@ -216,6 +219,7 @@ clojure -Sdeps '{:deps {io.github.mentat-collective/clerk-utils {:git/sha "40e7c
 ```
 
 For details on deps-new and templates see: 
+- [very short and good video tutorial](https://www.youtube.com/watch?v=2K7cQ8UYRzo)
 - [deps-new](https://github.com/seancorfield/deps-new)
 - [practically templates](https://practical.li/clojure/clojure-cli/projects/templates/)
 
@@ -538,8 +542,11 @@ If you are starting completely from scatch, this is needed to create a project i
 # brew install clojure/tools/clojure ; already done - not needed
 # brew install babashka/brew/neil    ; already done - not needed
 
-# DOES NOT WORK, BECAUSE USES deps-new!
-# neil new io.github.kit-clj/kit e06/app :args '[+full]'
+# DOES NOT WORK with parameters:
+# neil new io.github.kit-clj/kit e06/app --xtdb # NOOOO :args '[+full]'
+# it seems to include libs (sometimes)
+# but not the template code
+
 
 # first, install clj-new...
 clojure -Ttools install-latest :lib com.github.seancorfield/clj-new :as clj-new
@@ -599,11 +606,9 @@ Still more upfront work to be done than a beginner can stand for a simple SPA...
 
 ### TODO example e07: bringing all together
 
-A lib template
-A frontend-template
-A fullstack template
+I'd like to have a fullstack template with components that fit together and are either finished or maintained:
 - A template like kit
-- reasonable css as default
+- reasonable css as default (bulma, e06:simple.css)
 - routing 
 - re-frame
 - user authentication and roles
@@ -615,16 +620,16 @@ A fullstack template
 - build.clj with ci and all single steps (clean, jar, ... deploy)
 - bb.edn with everything to lookup
 
-see:
-- [all the tools in practically deps.edn](https://github.com/practicalli/clojure-cli-config/blob/main/deps.edn)
-- [video practically](https://www.youtube.com/watch?v=u5VoFpsntXc)
-- [video Sean Corfield](https://youtu.be/CWjUccpFvrg?si=cagzN032WH5wjmn7)
-creating my own project template...
-[deps-new templates](https://github.com/seancorfield/deps-new?tab=readme-ov-file#templates)
+There is something:
+
+- Kind of... [Hammock Web Development](https://clyfe.infinityfreeapp.com/book.html?i=2#_functional_web_building_blocks) - clyfe 
+- This is it: https://www.shipclojure.com/, even email and payment
+- my old example: https://github.com/bennoloeffler/decision-konsent
 
 
 
-### TODO example e08: electric - the new shit
+
+### example e08: electric - the new shit
 https://github.com/hyperfiddle/electric-v2-starter-app
 I just did:
 ```
@@ -679,36 +684,38 @@ clj -Sdeps '{:deps {seancorfield/deps-new {:git/tag "v0.8.0" :git/sha "2f96530"}
 
 # Helpful links:
 
-## cognitect
-[tools.build guide](https://clojure.org/guides/tools_build)
-
-
 ## sean corfield
-[deps-new - deps only](https://github.com/seancorfield/deps-new)
-[clj-new - templates like lein](https://github.com/seancorfield/clj-new)
-[outdated build-clj](https://github.com/seancorfield/build-clj)
+- [deps-new - deps only](https://github.com/seancorfield/deps-new)
+- [clj-new - templates like lein](https://github.com/seancorfield/clj-new)
+- [deps-new templates](https://github.com/seancorfield/deps-new?tab=readme-ov-file#templates)
+- [video Sean Corfield deps.edn](https://youtu.be/CWjUccpFvrg?si=cagzN032WH5wjmn7)
+- [outdated build-clj](https://github.com/seancorfield/build-clj)
 
 ## borkdude
-[lein2deps](https://github.com/borkdude/lein2deps)
-[neil](https://github.com/babashka/neil)
-To install [borkdudes deps.clj](https://github.com/borkdude/deps.clj) instead of the bash/powershell based clj tools:
-```
-$ curl -sL https://raw.githubusercontent.com/borkdude/deps.clj/master/install > install_clojure
-$ chmod +x ./install_clojure
-$ ./install_clojure --as-clj
-```
-The native executable for the clojure clj tools may be especially useful for Windows users...
-- [clj win installer](https://github.com/casselc/clj-msi?tab=readme-ov-file)
-- [deps.clj](https://github.com/borkdude/deps.clj)
+- [lein2deps](https://github.com/borkdude/lein2deps)
+- [neil](https://github.com/babashka/neil)
+- To install [borkdudes deps.clj](https://github.com/borkdude/deps.clj) instead of the bash/powershell based clj tools:
+  ```
+  $ curl -sL https://raw.githubusercontent.com/borkdude/deps.clj/master/install > install_clojure
+  $ chmod +x ./install_clojure
+  $ ./install_clojure --as-clj
+  ```
+- The native executable for the clojure clj tools may be especially useful for Windows users...
+  - [clj win installer](https://github.com/casselc/clj-msi?tab=readme-ov-file)
+  - [deps.clj](https://github.com/borkdude/deps.clj)
 
 
 ## practically
-[tutorial](https://practical.li/clojure/clojure-cli/projects/)
-[practically templates](https://practical.li/blog-staging/posts/create-deps-new-template-for-clojure-cli-projects/)
+- [tutorial](https://practical.li/clojure/clojure-cli/projects/)
+- [video practically](https://www.youtube.com/watch?v=u5VoFpsntXc)
+- [practically templates](https://practical.li/blog-staging/posts/create-deps-new-template-for-clojure-cli-projects/)
+- [all the tools in practically deps.edn](https://github.com/practicalli/clojure-cli-config/blob/main/deps.edn)
+
 
 
 ## all refs
-[overview of all tools](https://github.com/clojure/tools.deps.alpha/wiki/Tools)
-[neil](https://github.com/babashka/neil)
-[tools.build guide](https://clojure.org/guides/tools_build)
-[creating libs](https://clojure-doc.org/articles/ecosystem/libraries_authoring/)
+- [overview of all tools](https://github.com/clojure/tools.deps.alpha/wiki/Tools)
+- [creating libs](https://clojure-doc.org/articles/ecosystem/libraries_authoring/)
+
+
+
